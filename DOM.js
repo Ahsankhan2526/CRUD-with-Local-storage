@@ -7,14 +7,10 @@ let targetTxt;
 let editBtn;
 let delBtn;
 
-let lsData;
 function addUser() {
   let lsData = localStorage.getItem("items");
-  if (!lsData) {
-    lsData = [];
-  } else {
-    lsData = JSON.parse(lsData);
-  }
+  if (!lsData) lsData = [];
+  else lsData = JSON.parse(lsData);
 
   if (input.value.trim().length > 2 && addBtn.innerHTML === "Add item") {
     ol.innerHTML += `<li>${input.value}<span>&nbsp;&nbsp;&nbsp;</span><button onclick="edit(this)">Edit</button>   <button onclick="delet(this)">Delete</button></li>`;
@@ -23,7 +19,11 @@ function addUser() {
     console.log("lsData: ", lsData);
   }
   if (addBtn.innerHTML === "update...") {
-    // console.log(input.value)
+    for (let i = 0; i < lsData.length; i++) { 
+      if (lsData[i].includes(targetTxt.nodeValue)) {
+        lsData[i] = lsData[i].replace(targetTxt.nodeValue,input.value);
+      }
+    }
     targetTxt.nodeValue = input.value;
     input.value = "";
     delBtn.removeAttribute("disabled");
@@ -32,16 +32,19 @@ function addUser() {
   }
   input.value = "";
   localStorage.setItem("items", JSON.stringify(lsData));
-  // lsData.push()
 }
 
 function edit(edt) {
+  
   targetTxt = edt.parentNode.childNodes[0];
   console.log("targetTxt: ", targetTxt);
+  
+
   editBtn = edt;
-  editBtn.setAttribute("disabled", "disabled");
+  editBtn.setAttribute("disabled", "disabled");  
   delBtn = edt.nextSibling.nextSibling;
   delBtn.setAttribute("disabled", "disabled");
+
   addBtn.innerHTML = "update...";
   input.value = targetTxt.nodeValue;
 }
